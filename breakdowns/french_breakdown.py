@@ -57,14 +57,14 @@ accented_u = [u'\N{LATIN SMALL LETTER U WITH ACUTE}', u'\N{LATIN SMALL LETTER U 
 
 def breakdownWord(word, recursive=False):
     word = word.lower()
-    isvowel = dict.fromkeys('aàáâãäåæeèéêëiìíîïoòóôõöøœuùúûü').has_key
+    isvowel = dict.fromkeys('aÃ Ã¡Ã¢Ã£Ã¤Ã¥Ã¦eÃ¨Ã©ÃªÃ«iÃ¬Ã­Ã®Ã¯oÃ²Ã³Ã´ÃµÃ¶Ã¸Å“uÃ¹ÃºÃ»Ã¼').has_key
     phonemes = []
     simple_convert = {
         'j': 'JH',
         'k': 'K',
         'q': 'K',
         'v': 'V',
-        u'\N{LATIN SMALL LETTER C WITH CEDILLA}': 'S'  # ç
+        u'\N{LATIN SMALL LETTER C WITH CEDILLA}': 'S'  # Ã§
     }
     easy_consonants = simple_convert.keys()
     pos = 0
@@ -284,6 +284,12 @@ def breakdownWord(word, recursive=False):
                 phonemes.append('K')
             elif previous == 'c' and len(word) > pos + 1 and word[pos + 1] != 'r':
                 phonemes.append('SH')
+            elif previous == 's' and len(word) > 1:
+                phonemes.append('SH')
+            elif len(word) > pos+2 and word[pos+1] in ['a','e','i','o','u','y',accented_a,accented_e,accented_i,accented_o,accented_u] and word[pos+2] == 'h':
+                phonemes.append('HH')
+            elif len(word)==2 and previous not in ['c','s']:
+                phonemes.append('HH')
             else:
                 pass
         elif letter == 'l':
@@ -350,13 +356,19 @@ def breakdownWord(word, recursive=False):
             else:
                 phonemes.append('R')
         elif letter == 's':
-            if pos + 1 == len(word) and not ((word[pos - 3] == 'i' and word[pos - 2] == 'l' and previous == 'i') or (
+            if (word[pos-2]=='o' and previous=='u' and len(word)>1 and pos+1==len(word)) or (word[pos-2]=='s' and previous=='u' and len(word)==3 and pos+1==len(word)): #nous, vous, sus
+                pass
+            elif (pos+1==len(word) and len(word)>1 and previous in ['u',accented_u]) or (len(word)==2 and previous =='o'):
+                phonemes.append('S')
+            elif pos + 1 == len(word) and not ((word[pos - 3] == 'i' and word[pos - 2] == 'l' and previous == 'i') or (
                                 word[pos - 3] in ['e', accented_e, 't'] and word[
                                 pos - 2] == 'l' and previous == 'a') or (
                                 word[pos - 3] == 'f' and word[pos - 2] == 'i' and previous == 'l') or word == 'lis'):
                 pass
             elif len(word) > pos + 2 and word[pos + 1] == 'c' and word[pos + 2] == 'h':
                 pass
+            elif len(word) > pos+1 and word[pos+1] == 'h':
+                pass 
             elif previous in ['d', 't']:
                 pass
             elif previous == 'e' and pos + 2 == len(word) and len(word) == 3 and word[pos + 1] == 't':  # est
@@ -450,19 +462,19 @@ if __name__ == "__main__":
                  'cailloux', 'champ', 'aime', 'ainsi', 'faim', 'mais', 'ennemmi', 'ennui', 'ensemble', 'plein', 'faux',
                  'beau', 'je', 'parle', 'timbre', 'oui', 'royal', 'loi', 'loin', 'brun', 'coeur', 'yeux', 'respect',
                  'blanc', 'village',
-                 'haricot', 'salut', 'nom', 'qui', 'langue', 'que', 'est', 'inefficace', 'gadget', 'frénésie', 'ample',
-                 'rendre', 'berlioz', 'chez', 'douze', 'lundi', 'faim', 'fin', 'zinc', 'condamné', 'bétail', 'taille',
-                 'beaucoup', 'son', 'huit', 'confrère', 'dialogue', 'soeur', 'femme', 'taxe',
+                 'haricot', 'salut', 'nom', 'qui', 'langue', 'que', 'est', 'inefficace', 'gadget', 'frÃ©nÃ©sie', 'ample',
+                 'rendre', 'berlioz', 'chez', 'douze', 'lundi', 'faim', 'fin', 'zinc', 'condamnÃ©', 'bÃ©tail', 'taille',
+                 'beaucoup', 'son', 'huit', 'confrÃ¨re', 'dialogue', 'soeur', 'femme', 'taxe',
                  'as', 'homme', 'bonjour', 'oiseau', 'huit', 'famille', 'indemne', 'faux', 'fais', 'lait', 'papillons',
                  'parfum', 'philosophe', 'mangue', 'banque', 'schema', 'atlas', 'lis', 'fils', 'syphilis', 'maison',
                  'patience', 'nation', 'thomas', 'tout', 'tout_un', 'texte',
                  'lundi', 'monsieur', 'condamner', 'faubourg', 'wagon', 'veau', 'innocence', 'deuxieme', 'exemple',
                  'deux_enfants',
-                 'gâteau', 'fermer', 'magique', 'forêt', 'dégât', 'crèche', 'wider',
-                 'criante', 'cybercafé', 'décence', 'dégénérer', 'déglinguée', 'christ', 'chien',
-                 'dégoût', 'delayer', 'détaillant', 'deuil', 'roues', 'frère',
+                 'gÃ¢teau', 'fermer', 'magique', 'forÃªt', 'dÃ©gÃ¢t', 'crÃ¨che', 'wider',
+                 'criante', 'cybercafÃ©', 'dÃ©cence', 'dÃ©gÃ©nÃ©rer', 'dÃ©glinguÃ©e', 'christ', 'chien',
+                 'dÃ©goÃ»t', 'delayer', 'dÃ©taillant', 'deuil', 'roues', 'frÃ¨re','shÃ©rif',
                  'dinde', 'dinosaure', 'dirigeable', 'document', 'dinosaure', 'motto',
-                 'éhonté', 'elle', 'elles', 'émeraude', 'émerger', 'fauve', 'semblant'
+                 'Ã©hontÃ©', 'elle', 'elles', 'Ã©meraude', 'Ã©merger', 'fauve', 'semblant'
                  ]
     for word in testwords:
         print word, breakdownWord(unicode(word, input_encoding))
