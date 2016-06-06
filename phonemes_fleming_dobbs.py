@@ -39,7 +39,7 @@ phoneme_set = [
     'rest'  # not really a phoneme - this is used in-between phrases when the mouth is at rest
 ]
 
-# Phoneme conversion dictionary: CMU on the left to Preston Blair on the right
+# Phoneme conversion dictionary: CMU on the left to Fleming Dobbs on the right
 phoneme_conversion = {
     'AA0': 'AA',  # odd     AA D
     'AA1': 'AA',
